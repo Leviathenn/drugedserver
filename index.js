@@ -20,7 +20,7 @@ const makeid = length => {
 wss.on('connection', function connection(ws, request) {
     const url = new URL(request.url, `ws://${request.headers.host}`);
     const path = url.pathname;
-    ws.send(path);  
+   // ws.send(path);  
     if (path.startsWith('/connect/')) {
         const connectid = path.slice('/connect/'.length);
         if(!connections[connectid]){
@@ -28,12 +28,13 @@ wss.on('connection', function connection(ws, request) {
             ws.close();
         }
         ws.on('message', (msg)=>{
+            
             try {
                 var msgdata = JSON.parse(msg);
                 var game = connections[connectid];
                 if(msgdata["action"] == "gamestart" && !game["gamestarted"] == true){
                     game["gamestarted"] = true;
-                }else if(msgdata["action"] == "correct"){
+                }else if(msgdata["action"] == "correct"){  
                     var player = msgdata["playerName"];
                     game.Players[player]["score"] += 1000;
                 }else if(msgdata["action"] == "incorrect"){
@@ -47,9 +48,21 @@ wss.on('connection', function connection(ws, request) {
                     }
                 }else if(msgdata["action"] == "leave" || msgdata["action"] == "kick"){
                     game.Players[msgdata["playerName"]] == null;
+                }else if(msgdata["action"] == "checkLeaderboard"){
+                    const leaderboard = Object.entries(game.Players).map(([playerName, playerData]) => ({
+                        playerName,
+                        score: playerData.score,
+                    }));
+                
+                    leaderboard.sort((a, b) => b.score - a.score); // Sort in descending order
+                    game.leaderboard = leaderboard;
+                    // Send the leaderboard to the client
+                    ws.send(JSON.stringify({ action: 'checkLeaderboard', leaderboard }));
+            
                 }
+     //           ws.send(JSON.stringify(msgdata) + JSON.stringify(game))
             } catch (error) {
-                ws.send(JSON.stringify({message:"invalid"}))
+                ws.send(JSON.stringify({message:error}))
             }
         })
     
@@ -59,6 +72,8 @@ wss.on('connection', function connection(ws, request) {
         const sessionNew = makeid(6);
         connections[sessionNew] = {
             Players: {},
+            leaderboard: {},
+            
             gamestarted: false
 
         };
