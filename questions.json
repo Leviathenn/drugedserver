@@ -1,0 +1,22 @@
+{
+    "questions":[
+        {
+            "text": "How many states have marijunna legal?",
+            "choices": {
+                "24": true,
+                "37": false,
+                "15": false,
+                "21": false
+            }
+        },
+        {
+            "text": "True or false, Smokeless tobacco is better for you than normal",
+            "choices":{
+                "true": false,
+                "false": true,
+                "true": true,
+                "false": false   
+            }
+        }
+    ]
+}
