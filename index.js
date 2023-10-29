@@ -30,8 +30,23 @@ wss.on('connection', function connection(ws, request) {
         ws.on('message', (msg)=>{
             try {
                 var msgdata = JSON.parse(msg);
-                if(msgdata["action"] == "gamestart"){
-
+                var game = connections[connectid];
+                if(msgdata["action"] == "gamestart" && !game["gamestarted"] == true){
+                    game["gamestarted"] = true;
+                }else if(msgdata["action"] == "correct"){
+                    var player = msgdata["playerName"];
+                    game.Players[player]["score"] += 1000;
+                }else if(msgdata["action"] == "incorrect"){
+                    var player = msgdata["playerName"];
+                    game.Players[player]["score"] -= 1000;
+                }else if(msgdata["action"] == "join"){
+                    game.Players[msgdata["playerName"]] = {
+                        score: 0,
+                        PowerUps: [],
+                        isHost: false
+                    }
+                }else if(msgdata["action"] == "leave" || msgdata["action"] == "kick"){
+                    game.Players[msgdata["playerName"]] == null;
                 }
             } catch (error) {
                 ws.send(JSON.stringify({message:"invalid"}))
