@@ -2,7 +2,8 @@
  * @author Leviathenn/Levi.A/Leviathan
  */
 import { WebSocketServer } from 'ws';
-import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken'
+import fs from 'fs';
 
 const wss = new WebSocketServer({ port: 8080 });
 
@@ -59,6 +60,9 @@ wss.on('connection', function connection(ws, request) {
                     // Send the leaderboard to the client
                     ws.send(JSON.stringify({ action: 'checkLeaderboard', leaderboard }));
             
+                }else if(msgdata["action"] == "fetchQuestions"){
+                    var questions = JSON.stringify(fs.readFileSync("questions.json"));
+                    ws.send(questions);
                 }
      //           ws.send(JSON.stringify(msgdata) + JSON.stringify(game))
             } catch (error) {
