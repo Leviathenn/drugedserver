@@ -61,7 +61,7 @@ wss.on('connection', function connection(ws, request) {
                     ws.send(JSON.stringify({ action: 'checkLeaderboard', leaderboard }));
             
                 }else if(msgdata["action"] == "fetchQuestions"){
-                    var questions = JSON.stringify(fs.readFileSync("questions.json"));
+                    var questions = fs.readFileSync("questions.json").toString();
                     ws.send(questions);
                 }
      //           ws.send(JSON.stringify(msgdata) + JSON.stringify(game))

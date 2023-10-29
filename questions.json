@@ -1,21 +1,21 @@
 {
     "questions":[
         {
-            "text": "How many states have marijunna legal?",
+            "text": "How many states have marijuana legal?",
             "choices": {
-                "24": true,
-                "37": false,
-                "15": false,
-                "21": false
+                "24": { "isCorrect": true },
+                "37": { "isCorrect": false },
+                "15": { "isCorrect": false },
+                "21": { "isCorrect": false }
             }
         },
         {
             "text": "True or false, Smokeless tobacco is better for you than normal",
             "choices":{
-                "true": false,
-                "false": true,
-                "true": true,
-                "false": false   
+                "true": { "isCorrect": false },
+                "false": { "isCorrect": true },
+                "true": { "isCorrect": true },
+                "false": { "isCorrect": false }   
             }
         }
     ]
